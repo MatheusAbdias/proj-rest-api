@@ -1,9 +1,52 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status 
+from rest_framework import viewsets
 
 from profiles_api import serializers
 
+class HelloViewSet(viewsets.ViewSet):
+    """Test ViewSet"""
+
+    serializer_class = serializers.HelloSerializer
+
+    def list(self,request):
+        """teste"""
+        a_viewset = [
+            'Use esta metodo para (list,recuperar,atualizar,atualizar um campo',
+            'Automaticamente mapeia as urls usando Roters',
+            'Proporciona mais funcionalidades com menos codigo',
+        ]
+
+        return(Response({'message':'Hello','a_viewset':a_viewset}))
+    def create(self,request):
+        """Cria uma nova menssagem"""
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            name = serializer.validated_data.get('name')
+            messagem=f'Hello {name}'
+            return Response({'messagem':messagem})
+        else:
+            return Response(
+                serializer.errors,
+                status = status.HTTP_400_BAD_REQUEST
+            )
+
+    def retrieve(self,request, pk = None):
+        """Retorna um objeto pela ID"""
+        return Response({'http_method':'PUT'})
+
+    def update(self, request, pk = None):
+        """Atualiza um objeto"""
+        return Response({'http_method':'PUT'})
+    
+    def partial_update(self,request,pk = None):
+        """Atualiza parte de um objeto"""
+        return Response({'http_method':'PATCH'})
+    
+    def destroy(self, request, pk = None):
+        """Remove um objeto"""
+        return Response({'http_method':'DELETE'})
 
 class HelloApiView(APIView):
     """Test API View"""
